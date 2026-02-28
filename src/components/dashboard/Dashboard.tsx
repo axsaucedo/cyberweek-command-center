@@ -354,6 +354,7 @@ export function Dashboard() {
               forecastOPM={simulation.forecastOPM}
               forecastWeight={simulation.forecastWeight}
               chartMode={simulation.chartMode}
+              speedMultiplier={simulation.speedMultiplier}
             />
             <BubbleOverlay
               orders={recentOrders}

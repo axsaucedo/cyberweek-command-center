@@ -38,17 +38,17 @@ export type ComboTier =
   | 'shopping_spree'
   | 'vip_shopper'
   | 'retail_rush'
-  | 'flash_sale'
-  | 'sold_out'
-  | 'black_friday'
+  | 'trendsetter'
+  | 'crowd_puller'
+  | 'high_roller'
   | 'doorbuster'
-  | 'mega_sale'
-  | 'retail_empire'
-  | 'market_domination'
-  | 'global_takeover'
-  | 'retail_singularity'
-  | 'commerce_god'
-  | 'retail_nirvana';
+  | 'power_broker'
+  | 'mogul'
+  | 'titan'
+  | 'overlord'
+  | 'legend'
+  | 'mythic'
+  | 'transcendent';
 
 export interface ComboTierConfig {
   name: string;

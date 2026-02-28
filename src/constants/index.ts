@@ -109,9 +109,9 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     replenishMultiplier: 3.5,
     description: 'A pure retail rush. The floor is packed, every aisle buzzing!',
   },
-  flash_sale: {
-    name: 'flash_sale',
-    label: 'FLASH SALE',
+  trendsetter: {
+    name: 'trendsetter',
+    label: 'TRENDSETTER',
     minCombo: 170,
     color: '#818cf8',
     glowColor: 'rgba(129, 140, 248, 0.6)',
@@ -119,11 +119,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.35,
     bgColor: '#0e0a1a',
     replenishMultiplier: 4.0,
-    description: 'Flash sale energy! Products flying off the shelves!',
+    description: 'You are defining the trends now. Everyone follows your lead.',
   },
-  sold_out: {
-    name: 'sold_out',
-    label: 'SOLD OUT',
+  crowd_puller: {
+    name: 'crowd_puller',
+    label: 'CROWD PULLER',
     minCombo: 250,
     color: '#34d399',
     glowColor: 'rgba(52, 211, 153, 0.6)',
@@ -131,11 +131,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.4,
     bgColor: '#081a10',
     replenishMultiplier: 5.0,
-    description: 'Items selling out instantly! Restock can barely keep up!',
+    description: 'Massive crowds drawn in by your reputation. The floor is packed!',
   },
-  black_friday: {
-    name: 'black_friday',
-    label: 'BLACK FRIDAY',
+  high_roller: {
+    name: 'high_roller',
+    label: 'HIGH ROLLER',
     minCombo: 350,
     color: '#f59e0b',
     glowColor: 'rgba(245, 158, 11, 0.6)',
@@ -143,7 +143,7 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.45,
     bgColor: '#1a150a',
     replenishMultiplier: 6.0,
-    description: 'Black Friday levels of chaos! Record-shattering demand!',
+    description: 'High rollers are spending big. Premium transactions across the board!',
   },
   doorbuster: {
     name: 'doorbuster',
@@ -157,9 +157,9 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     replenishMultiplier: 7.0,
     description: 'Doorbuster deals have been unleashed. Pure retail pandemonium!',
   },
-  mega_sale: {
-    name: 'mega_sale',
-    label: 'MEGA SALE',
+  power_broker: {
+    name: 'power_broker',
+    label: 'POWER BROKER',
     minCombo: 750,
     color: '#22d3ee',
     glowColor: 'rgba(34, 211, 238, 0.7)',
@@ -167,11 +167,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.55,
     bgColor: '#081620',
     replenishMultiplier: 8.0,
-    description: 'The mega sale of the century. Revenue numbers are staggering.',
+    description: 'You broker the deals that shape the market. Unstoppable influence.',
   },
-  retail_empire: {
-    name: 'retail_empire',
-    label: 'RETAIL EMPIRE',
+  mogul: {
+    name: 'mogul',
+    label: 'MOGUL',
     minCombo: 1000,
     color: '#fbbf24',
     glowColor: 'rgba(251, 191, 36, 0.7)',
@@ -179,11 +179,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.6,
     bgColor: '#1a1608',
     replenishMultiplier: 10.0,
-    description: 'You have built a retail empire. Every transaction is gold.',
+    description: 'A true retail mogul. Every transaction is gold.',
   },
-  market_domination: {
-    name: 'market_domination',
-    label: 'MARKET DOMINATION',
+  titan: {
+    name: 'titan',
+    label: 'TITAN',
     minCombo: 1500,
     color: '#f472b6',
     glowColor: 'rgba(244, 114, 182, 0.7)',
@@ -191,11 +191,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.65,
     bgColor: '#1a0a14',
     replenishMultiplier: 12.0,
-    description: 'Total market domination. Competitors can only watch in awe.',
+    description: 'A titan of commerce. Competitors can only watch in awe.',
   },
-  global_takeover: {
-    name: 'global_takeover',
-    label: 'GLOBAL TAKEOVER',
+  overlord: {
+    name: 'overlord',
+    label: 'OVERLORD',
     minCombo: 2000,
     color: '#38bdf8',
     glowColor: 'rgba(56, 189, 248, 0.8)',
@@ -203,11 +203,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.7,
     bgColor: '#081422',
     replenishMultiplier: 15.0,
-    description: 'Global retail takeover. Every market on the planet is yours.',
+    description: 'The retail overlord. Every market on the planet answers to you.',
   },
-  retail_singularity: {
-    name: 'retail_singularity',
-    label: 'RETAIL SINGULARITY',
+  legend: {
+    name: 'legend',
+    label: 'LEGEND',
     minCombo: 3000,
     color: '#a78bfa',
     glowColor: 'rgba(167, 139, 250, 0.8)',
@@ -215,11 +215,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.75,
     bgColor: '#100a1a',
     replenishMultiplier: 20.0,
-    description: 'A retail singularity. Commerce itself bends to your will.',
+    description: 'A living legend. Commerce itself bends to your will.',
   },
-  commerce_god: {
-    name: 'commerce_god',
-    label: 'COMMERCE GOD',
+  mythic: {
+    name: 'mythic',
+    label: 'MYTHIC',
     minCombo: 5000,
     color: '#fbbf24',
     glowColor: 'rgba(251, 191, 36, 0.9)',
@@ -227,11 +227,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.8,
     bgColor: '#1a1608',
     replenishMultiplier: 25.0,
-    description: 'The god of commerce. Every purchase in existence flows through you.',
+    description: 'Mythic status achieved. Every purchase in existence flows through you.',
   },
-  retail_nirvana: {
-    name: 'retail_nirvana',
-    label: 'RETAIL NIRVANA',
+  transcendent: {
+    name: 'transcendent',
+    label: 'TRANSCENDENT',
     minCombo: 10000,
     color: '#ffffff',
     glowColor: 'rgba(255, 255, 255, 0.9)',
@@ -239,14 +239,14 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.85,
     bgColor: '#1a1a1a',
     replenishMultiplier: 30.0,
-    description: 'Retail nirvana. The ultimate state of commercial transcendence.',
+    description: 'Transcendent. The ultimate state of commercial mastery.',
   },
 };
 
 export const COMBO_TIER_ORDER: ComboTier[] = [
-  'retail_nirvana', 'commerce_god', 'retail_singularity', 'global_takeover', 'market_domination',
-  'retail_empire', 'mega_sale', 'doorbuster', 'black_friday', 'sold_out',
-  'flash_sale', 'retail_rush', 'vip_shopper', 'shopping_spree', 'impulse_buyer',
+  'transcendent', 'mythic', 'legend', 'overlord', 'titan',
+  'mogul', 'power_broker', 'doorbuster', 'high_roller', 'crowd_puller',
+  'trendsetter', 'retail_rush', 'vip_shopper', 'shopping_spree', 'impulse_buyer',
   'checkout_ready', 'adding_to_cart', 'window_shopping', 'browsing', 'none',
 ];
 

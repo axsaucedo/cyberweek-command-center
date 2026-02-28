@@ -12,6 +12,7 @@ interface Props {
   forecastOPM: number;
   forecastWeight: number;
   chartMode: 'net' | 'cumulative';
+  speedMultiplier: number;
 }
 
 function safeMax(arr: number[], fallback: number): number {
@@ -24,7 +25,7 @@ function safeMax(arr: number[], fallback: number): number {
 
 function VelocityChartInner({
   buckets, maxBuckets, tier, effectsIntensity,
-  forecastEnabled, forecastOPM, forecastWeight, chartMode,
+  forecastEnabled, forecastOPM, forecastWeight, chartMode, speedMultiplier,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +37,7 @@ function VelocityChartInner({
   bucketsRef.current = buckets;
 
   const tierConfig = COMBO_TIERS[tier];
-  const forecastPerSecond = forecastOPM / 60;
+  const forecastPerSecond = (forecastOPM * speedMultiplier) / 60;
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -337,7 +338,7 @@ function VelocityChartInner({
     ctx.fillText(chartMode === 'cumulative' ? 'CUMULATIVE' : 'PER SECOND', padding.left + 4, padding.top + 12);
 
     animFrameRef.current = requestAnimationFrame(draw);
-  }, [maxBuckets, tierConfig, effectsIntensity, forecastEnabled, forecastPerSecond, forecastWeight, chartMode]);
+  }, [maxBuckets, tierConfig, effectsIntensity, forecastEnabled, forecastPerSecond, forecastWeight, chartMode, speedMultiplier]);
 
   useEffect(() => {
     animFrameRef.current = requestAnimationFrame(draw);
