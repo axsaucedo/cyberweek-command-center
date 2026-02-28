@@ -32,16 +32,16 @@ interface TierAnnouncementData {
 
 export function Dashboard() {
   const [simulation, setSimulation] = useState<SimulationConfig>({
-    ordersPerMinute: 500,
+    ordersPerMinute: 100,
     speedMultiplier: 1,
     isPlaying: false,
     burstMode: false,
-    forecastEnabled: false,
-    forecastOPM: 500,
-    forecastWeight: 0,
+    forecastEnabled: true,
+    forecastOPM: 100,
+    forecastWeight: 0.25,
     volatility: 0.6,
     trendRange: 0.8,
-    chartMode: 'net',
+    chartMode: 'cumulative',
   });
 
   const [soundConfig, setSoundConfig] = useState<SoundConfig>({
@@ -53,7 +53,7 @@ export function Dashboard() {
   });
 
   const [effectsConfig, setEffectsConfig] = useState<EffectsConfig>({ intensity: 0.8 });
-  const [controlsVisible, setControlsVisible] = useState(true);
+  const [controlsVisible, setControlsVisible] = useState(false);
 
   const [stats, setStats] = useState<DashboardStats>({
     totalOrders: 0,

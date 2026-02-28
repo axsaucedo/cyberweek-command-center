@@ -160,19 +160,19 @@ function drawIcon(ctx: CanvasRenderingContext2D, cat: OrderCategory, cx: number,
 
 function computeAlpha(x: number, canvasWidth: number, cardWidth: number): number {
   const entryZone = canvasWidth * 0.25;
-  const exitZone = canvasWidth * 0.2;
-  const rightEdge = canvasWidth - cardWidth / 2;
-  const leftEdge = cardWidth / 2;
+  const exitZone = canvasWidth * 0.3;
+  const rightEdge = canvasWidth + cardWidth;
+  const exitStart = exitZone + cardWidth / 2;
 
   const distFromRight = rightEdge - x;
-  const distFromLeft = x - leftEdge;
+  const distFromLeft = x + cardWidth / 2;
 
   let alpha = 1;
   if (distFromRight < entryZone) {
     alpha = Math.min(alpha, distFromRight / entryZone);
   }
-  if (distFromLeft < exitZone) {
-    alpha = Math.min(alpha, distFromLeft / exitZone);
+  if (distFromLeft < exitStart) {
+    alpha = Math.min(alpha, distFromLeft / exitStart);
   }
 
   return Math.max(0, Math.min(1, alpha));
@@ -280,12 +280,10 @@ function BubbleOverlayInner({ orders, intensity }: Props) {
     let i = cardsRef.current.length;
     while (i--) {
       const c = cardsRef.current[i];
-      c.life -= dt;
-      if (c.life <= 0 || c.x < -c.width - 20) {
-        cardsRef.current.splice(i, 1);
-        continue;
-      }
       c.x += c.vx * dt;
+      if (c.x < -c.width * 2) {
+        cardsRef.current.splice(i, 1);
+      }
     }
 
     ctx.clearRect(0, 0, w, h);
