@@ -11,6 +11,7 @@ interface Props {
   sound: SoundConfig;
   effects: EffectsConfig;
   visible: boolean;
+  tierBgColor: string;
   onSimulationChange: (config: SimulationConfig) => void;
   onSoundChange: (config: SoundConfig) => void;
   onEffectsChange: (config: EffectsConfig) => void;
@@ -23,7 +24,7 @@ const RATE_PRESETS = [100, 500, 1000, 5000, 10000];
 const FORECAST_PRESETS = [100, 500, 1000, 2000, 5000];
 
 function ControlsDockInner({
-  simulation, sound, effects, visible,
+  simulation, sound, effects, visible, tierBgColor,
   onSimulationChange, onSoundChange, onEffectsChange, onReset, onToggleVisible,
 }: Props) {
   return (
@@ -36,10 +37,10 @@ function ControlsDockInner({
       </button>
 
       <div
-        className="transition-all duration-300 overflow-hidden backdrop-blur-md"
+        className="transition-all duration-1000 overflow-hidden backdrop-blur-md"
         style={{
           maxHeight: visible ? 320 : 0,
-          background: 'rgba(15,20,35,0.9)',
+          background: tierBgColor,
           borderTop: '1px solid rgba(255,255,255,0.08)',
         }}
       >

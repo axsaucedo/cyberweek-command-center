@@ -390,6 +390,7 @@ export function Dashboard() {
         sound={soundConfig}
         effects={effectsConfig}
         visible={controlsVisible}
+        tierBgColor={COMBO_TIERS[combo.tier].bgColor}
         onSimulationChange={setSimulation}
         onSoundChange={setSoundConfig}
         onEffectsChange={setEffectsConfig}
