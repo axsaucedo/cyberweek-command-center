@@ -38,6 +38,7 @@ export function Dashboard() {
     burstMode: false,
     forecastEnabled: false,
     forecastOPM: 500,
+    forecastWeight: 0,
     volatility: 0.6,
     trendRange: 0.8,
     chartMode: 'net',
@@ -351,6 +352,7 @@ export function Dashboard() {
               effectsIntensity={effectsConfig.intensity}
               forecastEnabled={simulation.forecastEnabled}
               forecastOPM={simulation.forecastOPM}
+              forecastWeight={simulation.forecastWeight}
               chartMode={simulation.chartMode}
             />
             <BubbleOverlay

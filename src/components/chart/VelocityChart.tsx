@@ -10,10 +10,22 @@ interface Props {
   effectsIntensity: number;
   forecastEnabled: boolean;
   forecastOPM: number;
+  forecastWeight: number;
   chartMode: 'net' | 'cumulative';
 }
 
-function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forecastEnabled, forecastOPM, chartMode }: Props) {
+function safeMax(arr: number[], fallback: number): number {
+  let max = fallback;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] > max) max = arr[i];
+  }
+  return max;
+}
+
+function VelocityChartInner({
+  buckets, maxBuckets, tier, effectsIntensity,
+  forecastEnabled, forecastOPM, forecastWeight, chartMode,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef(0);
@@ -32,14 +44,23 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const dpr = window.devicePixelRatio;
+    const dpr = window.devicePixelRatio || 1;
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
+    if (w === 0 || h === 0) {
+      animFrameRef.current = requestAnimationFrame(draw);
+      return;
+    }
     canvas.width = w * dpr;
     canvas.height = h * dpr;
     ctx.scale(dpr, dpr);
 
     const rawBuckets = bucketsRef.current;
+
+    let firstNonZero = -1;
+    for (let i = 0; i < rawBuckets.length; i++) {
+      if (rawBuckets[i] > 0) { firstNonZero = i; break; }
+    }
 
     let displayData: number[];
     if (chartMode === 'cumulative') {
@@ -50,22 +71,31 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
         displayData.push(sum);
       }
     } else {
-      displayData = rawBuckets;
+      displayData = [...rawBuckets];
     }
 
-    let forecastLine: number[];
-    if (forecastEnabled && forecastPerSecond > 0) {
+    const dataStart = firstNonZero >= 0 ? firstNonZero : displayData.length;
+    const dataLen = displayData.length - dataStart;
+
+    const weightMultiplier = 1 + forecastWeight;
+    let forecastLine: number[] = [];
+    if (forecastEnabled && forecastPerSecond > 0 && dataLen > 0) {
+      const weightedFPS = forecastPerSecond * weightMultiplier;
       if (chartMode === 'cumulative') {
-        forecastLine = displayData.map((_, i) => (i + 1) * forecastPerSecond);
+        forecastLine = new Array(dataStart).fill(0);
+        for (let i = dataStart; i < displayData.length; i++) {
+          const elapsed = i - dataStart + 1;
+          forecastLine.push(elapsed * weightedFPS);
+        }
       } else {
-        forecastLine = displayData.map(() => forecastPerSecond);
+        forecastLine = new Array(dataStart).fill(0);
+        for (let i = dataStart; i < displayData.length; i++) {
+          forecastLine.push(weightedFPS);
+        }
       }
-    } else {
-      forecastLine = [];
     }
 
-    const allVals = [...displayData, ...forecastLine];
-    const maxVal = Math.max(5, ...allVals) * 1.15;
+    const maxVal = Math.max(5, safeMax(displayData, 0), safeMax(forecastLine, 0)) * 1.15;
     const padding = { top: 20, right: 20, bottom: 30, left: 55 };
     const chartW = w - padding.left - padding.right;
     const chartH = h - padding.top - padding.bottom;
@@ -93,20 +123,32 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
     ctx.fillStyle = 'rgba(255,255,255,0.3)';
     ctx.font = '11px system-ui';
     ctx.textAlign = 'center';
-    const labelCount = Math.min(6, displayData.length);
-    const step = Math.floor(displayData.length / labelCount) || 1;
-    for (let i = 0; i < displayData.length; i += step) {
-      const x = padding.left + (i / Math.max(1, displayData.length - 1)) * chartW;
-      const secsAgo = displayData.length - 1 - i;
-      const lbl = secsAgo === 0 ? 'now' : `-${secsAgo}s`;
+    const totalBuckets = Math.max(1, maxBuckets - 1);
+    const labelStep = Math.max(1, Math.floor(maxBuckets / 6));
+    for (let i = 0; i < maxBuckets; i += labelStep) {
+      const x = padding.left + (i / totalBuckets) * chartW;
+      const secsAgo = maxBuckets - 1 - i;
+      const lbl = secsAgo === 0 ? 'now' : `${secsAgo}s`;
       ctx.fillText(lbl, x, h - 8);
     }
+    {
+      const x = padding.left + chartW;
+      ctx.fillText('now', x, h - 8);
+    }
 
-    if (forecastLine.length > 1) {
-      const fPoints: [number, number][] = forecastLine.map((val, i) => [
-        padding.left + (i / Math.max(1, maxBuckets - 1)) * chartW,
-        padding.top + chartH - (val / maxVal) * chartH,
-      ]);
+    if (displayData.length < 2 || dataLen < 1) {
+      animFrameRef.current = requestAnimationFrame(draw);
+      return;
+    }
+
+    const toX = (i: number) => padding.left + (i / totalBuckets) * chartW;
+    const toY = (val: number) => padding.top + chartH - (val / maxVal) * chartH;
+
+    if (forecastLine.length > dataStart + 1) {
+      const fPoints: [number, number][] = [];
+      for (let i = dataStart; i < forecastLine.length; i++) {
+        fPoints.push([toX(i), toY(forecastLine[i])]);
+      }
 
       ctx.setLineDash([6, 4]);
       ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)';
@@ -123,18 +165,13 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
       ctx.fillStyle = 'rgba(251, 191, 36, 0.7)';
       ctx.font = 'bold 10px system-ui';
       ctx.textAlign = 'right';
-      ctx.fillText('FORECAST', lastFP[0] - 4, lastFP[1] - 5);
+      const weightLabel = forecastWeight !== 0
+        ? `FORECAST (${forecastWeight > 0 ? '+' : ''}${Math.round(forecastWeight * 100)}%)`
+        : 'FORECAST';
+      ctx.fillText(weightLabel, lastFP[0] - 4, lastFP[1] - 5);
     }
 
-    if (displayData.length < 2) {
-      animFrameRef.current = requestAnimationFrame(draw);
-      return;
-    }
-
-    const points: [number, number][] = displayData.map((val, i) => [
-      padding.left + (i / (maxBuckets - 1)) * chartW,
-      padding.top + chartH - (val / maxVal) * chartH,
-    ]);
+    const points: [number, number][] = displayData.map((val, i) => [toX(i), toY(val)]);
 
     const lastVal = displayData[displayData.length - 1] || 0;
     const forecastAtEnd = forecastLine.length > 0 ? forecastLine[forecastLine.length - 1] : 0;
@@ -143,71 +180,74 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
       ? (isAboveForecast ? '#22c55e' : '#ef4444')
       : tierConfig.color;
 
-    if (forecastLine.length > 0) {
-      const fPoints: [number, number][] = forecastLine.map((val, i) => [
-        padding.left + (i / Math.max(1, maxBuckets - 1)) * chartW,
-        padding.top + chartH - (val / maxVal) * chartH,
-      ]);
-
-      ctx.save();
-      ctx.beginPath();
-      for (let i = 0; i < fPoints.length; i++) {
-        if (i === 0) ctx.moveTo(fPoints[i][0], fPoints[i][1]);
-        else ctx.lineTo(fPoints[i][0], fPoints[i][1]);
+    if (forecastLine.length > dataStart + 1) {
+      const fPoints: [number, number][] = [];
+      for (let i = dataStart; i < forecastLine.length; i++) {
+        fPoints.push([toX(i), toY(forecastLine[i])]);
       }
-      ctx.lineTo(w - padding.right, padding.top);
-      ctx.lineTo(padding.left, padding.top);
-      ctx.closePath();
-      ctx.clip();
 
-      const aboveGradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
-      aboveGradient.addColorStop(0, 'rgba(34, 197, 94, 0.2)');
-      aboveGradient.addColorStop(1, 'rgba(34, 197, 94, 0.01)');
+      const dataPoints = points.slice(dataStart);
+      if (dataPoints.length > 0 && fPoints.length > 0) {
+        ctx.save();
+        ctx.beginPath();
+        for (let i = 0; i < fPoints.length; i++) {
+          if (i === 0) ctx.moveTo(fPoints[i][0], fPoints[i][1]);
+          else ctx.lineTo(fPoints[i][0], fPoints[i][1]);
+        }
+        ctx.lineTo(fPoints[fPoints.length - 1][0], padding.top);
+        ctx.lineTo(fPoints[0][0], padding.top);
+        ctx.closePath();
+        ctx.clip();
 
-      ctx.beginPath();
-      ctx.moveTo(points[0][0], fPoints[0][1]);
-      ctx.lineTo(points[0][0], points[0][1]);
-      for (let i = 1; i < points.length; i++) {
-        const prev = points[i - 1];
-        const curr = points[i];
-        const cpx = (prev[0] + curr[0]) / 2;
-        ctx.bezierCurveTo(cpx, prev[1], cpx, curr[1], curr[0], curr[1]);
+        const aboveGradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
+        aboveGradient.addColorStop(0, 'rgba(34, 197, 94, 0.2)');
+        aboveGradient.addColorStop(1, 'rgba(34, 197, 94, 0.01)');
+
+        ctx.beginPath();
+        ctx.moveTo(dataPoints[0][0], fPoints[0][1]);
+        ctx.lineTo(dataPoints[0][0], dataPoints[0][1]);
+        for (let i = 1; i < dataPoints.length; i++) {
+          const prev = dataPoints[i - 1];
+          const curr = dataPoints[i];
+          const cpx = (prev[0] + curr[0]) / 2;
+          ctx.bezierCurveTo(cpx, prev[1], cpx, curr[1], curr[0], curr[1]);
+        }
+        ctx.lineTo(dataPoints[dataPoints.length - 1][0], fPoints[fPoints.length - 1][1]);
+        ctx.closePath();
+        ctx.fillStyle = aboveGradient;
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.beginPath();
+        for (let i = 0; i < fPoints.length; i++) {
+          if (i === 0) ctx.moveTo(fPoints[i][0], fPoints[i][1]);
+          else ctx.lineTo(fPoints[i][0], fPoints[i][1]);
+        }
+        ctx.lineTo(fPoints[fPoints.length - 1][0], padding.top + chartH);
+        ctx.lineTo(fPoints[0][0], padding.top + chartH);
+        ctx.closePath();
+        ctx.clip();
+
+        const belowGradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
+        belowGradient.addColorStop(0, 'rgba(239, 68, 68, 0.01)');
+        belowGradient.addColorStop(1, 'rgba(239, 68, 68, 0.12)');
+
+        ctx.beginPath();
+        ctx.moveTo(dataPoints[0][0], fPoints[0][1]);
+        ctx.lineTo(dataPoints[0][0], dataPoints[0][1]);
+        for (let i = 1; i < dataPoints.length; i++) {
+          const prev = dataPoints[i - 1];
+          const curr = dataPoints[i];
+          const cpx = (prev[0] + curr[0]) / 2;
+          ctx.bezierCurveTo(cpx, prev[1], cpx, curr[1], curr[0], curr[1]);
+        }
+        ctx.lineTo(dataPoints[dataPoints.length - 1][0], fPoints[fPoints.length - 1][1]);
+        ctx.closePath();
+        ctx.fillStyle = belowGradient;
+        ctx.fill();
+        ctx.restore();
       }
-      ctx.lineTo(points[points.length - 1][0], fPoints[fPoints.length - 1][1]);
-      ctx.closePath();
-      ctx.fillStyle = aboveGradient;
-      ctx.fill();
-      ctx.restore();
-
-      ctx.save();
-      ctx.beginPath();
-      for (let i = 0; i < fPoints.length; i++) {
-        if (i === 0) ctx.moveTo(fPoints[i][0], fPoints[i][1]);
-        else ctx.lineTo(fPoints[i][0], fPoints[i][1]);
-      }
-      ctx.lineTo(w - padding.right, padding.top + chartH);
-      ctx.lineTo(padding.left, padding.top + chartH);
-      ctx.closePath();
-      ctx.clip();
-
-      const belowGradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
-      belowGradient.addColorStop(0, 'rgba(239, 68, 68, 0.01)');
-      belowGradient.addColorStop(1, 'rgba(239, 68, 68, 0.12)');
-
-      ctx.beginPath();
-      ctx.moveTo(points[0][0], fPoints[0][1]);
-      ctx.lineTo(points[0][0], points[0][1]);
-      for (let i = 1; i < points.length; i++) {
-        const prev = points[i - 1];
-        const curr = points[i];
-        const cpx = (prev[0] + curr[0]) / 2;
-        ctx.bezierCurveTo(cpx, prev[1], cpx, curr[1], curr[0], curr[1]);
-      }
-      ctx.lineTo(points[points.length - 1][0], fPoints[fPoints.length - 1][1]);
-      ctx.closePath();
-      ctx.fillStyle = belowGradient;
-      ctx.fill();
-      ctx.restore();
     } else {
       const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
       gradient.addColorStop(0, tierConfig.color + 'cc');
@@ -215,9 +255,9 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
       gradient.addColorStop(1, tierConfig.color + '05');
 
       ctx.beginPath();
-      ctx.moveTo(points[0][0], padding.top + chartH);
-      ctx.lineTo(points[0][0], points[0][1]);
-      for (let i = 1; i < points.length; i++) {
+      ctx.moveTo(points[dataStart][0], padding.top + chartH);
+      ctx.lineTo(points[dataStart][0], points[dataStart][1]);
+      for (let i = dataStart + 1; i < points.length; i++) {
         const prev = points[i - 1];
         const curr = points[i];
         const cpx = (prev[0] + curr[0]) / 2;
@@ -230,8 +270,8 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
     }
 
     ctx.beginPath();
-    ctx.moveTo(points[0][0], points[0][1]);
-    for (let i = 1; i < points.length; i++) {
+    ctx.moveTo(points[dataStart][0], points[dataStart][1]);
+    for (let i = dataStart + 1; i < points.length; i++) {
       const prev = points[i - 1];
       const curr = points[i];
       const cpx = (prev[0] + curr[0]) / 2;
@@ -297,7 +337,7 @@ function VelocityChartInner({ buckets, maxBuckets, tier, effectsIntensity, forec
     ctx.fillText(chartMode === 'cumulative' ? 'CUMULATIVE' : 'PER SECOND', padding.left + 4, padding.top + 12);
 
     animFrameRef.current = requestAnimationFrame(draw);
-  }, [maxBuckets, tierConfig, effectsIntensity, forecastEnabled, forecastPerSecond, chartMode]);
+  }, [maxBuckets, tierConfig, effectsIntensity, forecastEnabled, forecastPerSecond, forecastWeight, chartMode]);
 
   useEffect(() => {
     animFrameRef.current = requestAnimationFrame(draw);

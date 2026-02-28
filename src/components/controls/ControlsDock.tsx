@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   Play, Pause, Zap,
   RotateCcw, ChevronUp, ChevronDown, Sparkles, Target,
-  TrendingUp, Activity, BarChart3, LineChart,
+  TrendingUp, Activity, BarChart3, LineChart, Scale,
 } from 'lucide-react';
 import type { SimulationConfig, SoundConfig, EffectsConfig } from '../../types';
 
@@ -156,6 +156,27 @@ function ControlsDockInner({
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div className="flex-1" style={{ maxWidth: 180, opacity: simulation.forecastEnabled ? 1 : 0.4 }}>
+                <div className="text-xs text-gray-500 mb-1.5 flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <Scale size={10} />
+                    Weight
+                  </span>
+                  <span className="text-gray-300">
+                    {simulation.forecastWeight > 0 ? '+' : ''}{Math.round(simulation.forecastWeight * 100)}%
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={-80}
+                  max={80}
+                  value={simulation.forecastWeight * 100}
+                  onChange={(e) => onSimulationChange({ ...simulation, forecastWeight: Number(e.target.value) / 100 })}
+                  className="w-full h-1 accent-amber-500"
+                  disabled={!simulation.forecastEnabled}
+                />
               </div>
 
               <div className="flex items-center">

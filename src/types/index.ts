@@ -70,6 +70,7 @@ export interface SimulationConfig {
   burstMode: boolean;
   forecastEnabled: boolean;
   forecastOPM: number;
+  forecastWeight: number;
   volatility: number;
   trendRange: number;
   chartMode: 'net' | 'cumulative';
