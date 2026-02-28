@@ -13,9 +13,9 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     replenishMultiplier: 1,
     description: 'No sales streak active. Start selling to build momentum!',
   },
-  browsing: {
-    name: 'browsing',
-    label: 'BROWSING',
+  curious_newcomer: {
+    name: 'curious_newcomer',
+    label: 'CURIOUS NEWCOMER',
     minCombo: 3,
     color: '#4ade80',
     glowColor: 'rgba(74, 222, 128, 0.3)',
@@ -23,11 +23,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0,
     bgColor: '#081a0e',
     replenishMultiplier: 1,
-    description: 'Customers are starting to browse. The store is waking up.',
+    description: 'A fresh face on the scene. Just getting warmed up.',
   },
-  window_shopping: {
-    name: 'window_shopping',
-    label: 'WINDOW SHOPPING',
+  window_gazer: {
+    name: 'window_gazer',
+    label: 'WINDOW GAZER',
     minCombo: 8,
     color: '#38bdf8',
     glowColor: 'rgba(56, 189, 248, 0.4)',
@@ -35,11 +35,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0,
     bgColor: '#081420',
     replenishMultiplier: 1.2,
-    description: 'Window shoppers are turning into buyers. Keep the displays fresh!',
+    description: 'Eyes on everything, mind made up. Ready to commit.',
   },
-  adding_to_cart: {
-    name: 'adding_to_cart',
-    label: 'ADDING TO CART',
+  cart_hoarder: {
+    name: 'cart_hoarder',
+    label: 'CART HOARDER',
     minCombo: 15,
     color: '#a78bfa',
     glowColor: 'rgba(167, 139, 250, 0.4)',
@@ -47,11 +47,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0,
     bgColor: '#100a1a',
     replenishMultiplier: 1.5,
-    description: 'Carts are filling up across the floor. Conversion is climbing!',
+    description: 'Grabbing everything in sight. The cart is overflowing!',
   },
-  checkout_ready: {
-    name: 'checkout_ready',
-    label: 'CHECKOUT READY',
+  deal_seeker: {
+    name: 'deal_seeker',
+    label: 'DEAL SEEKER',
     minCombo: 25,
     color: '#fbbf24',
     glowColor: 'rgba(251, 191, 36, 0.5)',
@@ -59,11 +59,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.1,
     bgColor: '#1a1608',
     replenishMultiplier: 1.8,
-    description: 'The checkout lines are forming. Registers are warming up!',
+    description: 'Sniffing out every bargain. No deal escapes this one.',
   },
   impulse_buyer: {
     name: 'impulse_buyer',
-    label: 'IMPULSE BUYERS',
+    label: 'IMPULSE BUYER',
     minCombo: 40,
     color: '#2dd4bf',
     glowColor: 'rgba(45, 212, 191, 0.5)',
@@ -71,11 +71,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.15,
     bgColor: '#081a16',
     replenishMultiplier: 2.0,
-    description: 'Impulse purchases everywhere! No one can resist these deals.',
+    description: 'No hesitation, no second thoughts. Just pure buying instinct.',
   },
-  shopping_spree: {
-    name: 'shopping_spree',
-    label: 'SHOPPING SPREE',
+  big_spender: {
+    name: 'big_spender',
+    label: 'BIG SPENDER',
     minCombo: 60,
     color: '#f472b6',
     glowColor: 'rgba(244, 114, 182, 0.5)',
@@ -83,11 +83,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.2,
     bgColor: '#1a0a14',
     replenishMultiplier: 2.5,
-    description: 'Full-blown shopping spree! Bags upon bags at every register.',
+    description: 'Money flows freely. Bags piling up at every register.',
   },
   vip_shopper: {
     name: 'vip_shopper',
-    label: 'VIP SHOPPERS',
+    label: 'VIP SHOPPER',
     minCombo: 85,
     color: '#22d3ee',
     glowColor: 'rgba(34, 211, 238, 0.5)',
@@ -95,11 +95,11 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.25,
     bgColor: '#081620',
     replenishMultiplier: 3.0,
-    description: 'VIP customers are going all in. Premium purchases rolling in!',
+    description: 'Red carpet treatment earned. Premium purchases rolling in!',
   },
-  retail_rush: {
-    name: 'retail_rush',
-    label: 'RETAIL RUSH',
+  floor_captain: {
+    name: 'floor_captain',
+    label: 'FLOOR CAPTAIN',
     minCombo: 120,
     color: '#fb923c',
     glowColor: 'rgba(251, 146, 60, 0.6)',
@@ -107,7 +107,7 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
     shakeIntensity: 0.3,
     bgColor: '#1a120a',
     replenishMultiplier: 3.5,
-    description: 'A pure retail rush. The floor is packed, every aisle buzzing!',
+    description: 'Running the show floor. Every aisle answers to you.',
   },
   trendsetter: {
     name: 'trendsetter',
@@ -246,8 +246,8 @@ export const COMBO_TIERS: Record<ComboTier, ComboTierConfig> = {
 export const COMBO_TIER_ORDER: ComboTier[] = [
   'transcendent', 'mythic', 'legend', 'overlord', 'titan',
   'mogul', 'power_broker', 'doorbuster', 'high_roller', 'crowd_puller',
-  'trendsetter', 'retail_rush', 'vip_shopper', 'shopping_spree', 'impulse_buyer',
-  'checkout_ready', 'adding_to_cart', 'window_shopping', 'browsing', 'none',
+  'trendsetter', 'floor_captain', 'vip_shopper', 'big_spender', 'impulse_buyer',
+  'deal_seeker', 'cart_hoarder', 'window_gazer', 'curious_newcomer', 'none',
 ];
 
 export function getTierForCombo(count: number): ComboTier {

@@ -81,15 +81,23 @@ function ComboDisplayInner({ combo }: Props) {
             x{combo.count}
           </div>
           {combo.count > 0 && combo.tier !== 'none' && (
-            <div
-              className="font-bold uppercase mt-0.5 transition-all duration-300 text-center leading-tight max-w-full"
-              style={{
-                color: tierConfig.color,
-                fontSize: labelSize,
-                letterSpacing: labelTracking,
-              }}
-            >
-              {tierConfig.label}
+            <div className="flex flex-col items-center mt-0.5">
+              <div
+                className="text-[7px] font-semibold uppercase tracking-[0.3em] transition-all duration-300"
+                style={{ color: tierConfig.color + '80' }}
+              >
+                COMBO
+              </div>
+              <div
+                className="font-bold uppercase transition-all duration-300 text-center leading-tight max-w-full"
+                style={{
+                  color: tierConfig.color,
+                  fontSize: labelSize,
+                  letterSpacing: labelTracking,
+                }}
+              >
+                {tierConfig.label}
+              </div>
             </div>
           )}
         </div>
