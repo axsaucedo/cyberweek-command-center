@@ -38,8 +38,9 @@ export function Dashboard() {
     burstMode: false,
     forecastEnabled: false,
     forecastOPM: 500,
-    volatility: 0.3,
-    trendRange: 0.4,
+    volatility: 0.6,
+    trendRange: 0.8,
+    chartMode: 'net',
   });
 
   const [soundConfig, setSoundConfig] = useState<SoundConfig>({
@@ -350,6 +351,7 @@ export function Dashboard() {
               effectsIntensity={effectsConfig.intensity}
               forecastEnabled={simulation.forecastEnabled}
               forecastOPM={simulation.forecastOPM}
+              chartMode={simulation.chartMode}
             />
             <BubbleOverlay
               orders={recentOrders}

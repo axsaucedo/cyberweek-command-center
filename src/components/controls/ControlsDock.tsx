@@ -2,7 +2,7 @@ import { memo } from 'react';
 import {
   Play, Pause, Zap,
   RotateCcw, ChevronUp, ChevronDown, Sparkles, Target,
-  TrendingUp, Activity,
+  TrendingUp, Activity, BarChart3, LineChart,
 } from 'lucide-react';
 import type { SimulationConfig, SoundConfig, EffectsConfig } from '../../types';
 
@@ -30,7 +30,7 @@ function ControlsDockInner({
     <div className="relative">
       <button
         onClick={onToggleVisible}
-        className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 hover:text-white px-4 py-1 rounded-t-lg text-xs flex items-center gap-1 transition-colors backdrop-blur-sm"
+        className="absolute -top-8 right-4 bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 hover:text-white px-4 py-1 rounded-t-lg text-xs flex items-center gap-1 transition-colors backdrop-blur-sm"
       >
         Settings {visible ? <ChevronDown size={12} /> : <ChevronUp size={12} />}
       </button>
@@ -38,7 +38,7 @@ function ControlsDockInner({
       <div
         className="transition-all duration-300 overflow-hidden backdrop-blur-md"
         style={{
-          maxHeight: visible ? 300 : 0,
+          maxHeight: visible ? 320 : 0,
           background: 'rgba(15,20,35,0.9)',
           borderTop: '1px solid rgba(255,255,255,0.08)',
         }}
@@ -157,6 +157,36 @@ function ControlsDockInner({
                   ))}
                 </div>
               </div>
+
+              <div className="flex items-center">
+                <div className="text-xs text-gray-500 mr-2">Chart</div>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => onSimulationChange({ ...simulation, chartMode: 'net' })}
+                    className="flex items-center gap-1 py-1 px-2 rounded text-xs font-medium transition-all"
+                    style={{
+                      background: simulation.chartMode === 'net' ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.05)',
+                      color: simulation.chartMode === 'net' ? '#93c5fd' : '#6b7280',
+                      border: `1px solid ${simulation.chartMode === 'net' ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                    }}
+                  >
+                    <LineChart size={10} />
+                    Net
+                  </button>
+                  <button
+                    onClick={() => onSimulationChange({ ...simulation, chartMode: 'cumulative' })}
+                    className="flex items-center gap-1 py-1 px-2 rounded text-xs font-medium transition-all"
+                    style={{
+                      background: simulation.chartMode === 'cumulative' ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.05)',
+                      color: simulation.chartMode === 'cumulative' ? '#93c5fd' : '#6b7280',
+                      border: `1px solid ${simulation.chartMode === 'cumulative' ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                    }}
+                  >
+                    <BarChart3 size={10} />
+                    Sum
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center gap-4">
@@ -171,7 +201,7 @@ function ControlsDockInner({
                 <input
                   type="range"
                   min={0}
-                  max={100}
+                  max={200}
                   value={simulation.volatility * 100}
                   onChange={(e) => onSimulationChange({ ...simulation, volatility: Number(e.target.value) / 100 })}
                   className="w-full h-1 accent-cyan-500"
@@ -189,7 +219,7 @@ function ControlsDockInner({
                 <input
                   type="range"
                   min={0}
-                  max={100}
+                  max={200}
                   value={simulation.trendRange * 100}
                   onChange={(e) => onSimulationChange({ ...simulation, trendRange: Number(e.target.value) / 100 })}
                   className="w-full h-1 accent-emerald-500"

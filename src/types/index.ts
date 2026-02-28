@@ -72,6 +72,7 @@ export interface SimulationConfig {
   forecastOPM: number;
   volatility: number;
   trendRange: number;
+  chartMode: 'net' | 'cumulative';
 }
 
 export interface DashboardStats {

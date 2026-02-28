@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react';
-import { Activity, BookOpen, Volume2, VolumeX } from 'lucide-react';
+import { Zap, BookOpen, Volume2, VolumeX } from 'lucide-react';
 import { formatDuration } from '../../utils';
 import type { DashboardStats, SoundConfig } from '../../types';
 import { MilestoneTracker } from '../milestones/MilestoneTracker';
@@ -33,9 +33,9 @@ function TopBarInner({ isPlaying, sessionStart, stats, soundConfig, onOpenRules,
       }}
     >
       <div className="flex items-center gap-3">
-        <Activity size={22} className="text-teal-400" />
+        <Zap size={22} className="text-amber-400" />
         <h1 className="text-lg font-bold text-white tracking-wide">
-          SALES COMMAND CENTER
+          CYBERWEEK PANEL
         </h1>
       </div>
 
