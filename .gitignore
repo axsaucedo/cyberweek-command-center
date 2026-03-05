@@ -92,3 +92,4 @@ _site/
 CLAUDE.md
 AGENTS.md
 dist/
+node_modules
