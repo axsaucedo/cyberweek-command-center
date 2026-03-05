@@ -94,3 +94,5 @@ AGENTS.md
 dist/
 node_modules
 node_modules/
+order-fountain
+node_modules
