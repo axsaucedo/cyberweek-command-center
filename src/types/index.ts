@@ -63,6 +63,14 @@ export interface ComboTierConfig {
   description: string;
 }
 
+export type OrderSourceType = 'simulation' | 'lightstep';
+
+export interface OrderSourceConfig {
+  type: OrderSourceType;
+  lightstepStatus: 'disconnected' | 'connecting' | 'connected' | 'error';
+  lightstepError?: string;
+}
+
 export interface SimulationConfig {
   ordersPerMinute: number;
   speedMultiplier: number;
@@ -74,6 +82,7 @@ export interface SimulationConfig {
   volatility: number;
   trendRange: number;
   chartMode: 'net' | 'cumulative';
+  source: OrderSourceConfig;
 }
 
 export interface DashboardStats {

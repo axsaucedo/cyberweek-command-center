@@ -92,3 +92,11 @@ _site/
 CLAUDE.md
 AGENTS.md
 dist/
+node_modules
+node_modules/
+order-fountain
+node_modules
+tmp/
+REPORT.md
+test-results/
+playwright-report/

@@ -3,6 +3,7 @@ import {
   Play, Pause, Zap,
   RotateCcw, ChevronUp, ChevronDown, Sparkles, Target,
   TrendingUp, Activity, BarChart3, LineChart, Scale,
+  Radio, MonitorPlay,
 } from 'lucide-react';
 import type { SimulationConfig, SoundConfig, EffectsConfig } from '../../types';
 
@@ -66,6 +67,42 @@ function ControlsDockInner({
             >
               <RotateCcw size={16} />
             </button>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <div className="text-xs text-gray-500">Source</div>
+            <div className="flex gap-1">
+              <button
+                onClick={() => onSimulationChange({
+                  ...simulation,
+                  source: { ...simulation.source, type: 'simulation' },
+                })}
+                className="flex items-center gap-1 py-1 px-2 rounded text-xs font-medium transition-all"
+                style={{
+                  background: simulation.source.type === 'simulation' ? 'rgba(34,197,94,0.3)' : 'rgba(255,255,255,0.05)',
+                  color: simulation.source.type === 'simulation' ? '#86efac' : '#6b7280',
+                  border: `1px solid ${simulation.source.type === 'simulation' ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                }}
+              >
+                <MonitorPlay size={10} />
+                Sim
+              </button>
+              <button
+                onClick={() => onSimulationChange({
+                  ...simulation,
+                  source: { ...simulation.source, type: 'lightstep' },
+                })}
+                className="flex items-center gap-1 py-1 px-2 rounded text-xs font-medium transition-all"
+                style={{
+                  background: simulation.source.type === 'lightstep' ? 'rgba(168,85,247,0.3)' : 'rgba(255,255,255,0.05)',
+                  color: simulation.source.type === 'lightstep' ? '#c4b5fd' : '#6b7280',
+                  border: `1px solid ${simulation.source.type === 'lightstep' ? 'rgba(168,85,247,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                }}
+              >
+                <Radio size={10} />
+                Live
+              </button>
+            </div>
           </div>
 
           <div className="flex-1 space-y-3">
