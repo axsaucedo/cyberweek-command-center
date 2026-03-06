@@ -4,7 +4,7 @@ import type {
   Order, SimulationConfig, SoundConfig,
 } from '../../types';
 import { COMBO_TIERS, ORDER_MILESTONES, REVENUE_MILESTONES, VELOCITY_MILESTONES, getTierIndex } from '../../constants';
-import { useOrderSimulator } from '../../hooks/useOrderSimulator';
+import { useOrderSource } from '../../hooks/useOrderSource';
 import { useComboTracker } from '../../hooks/useComboTracker';
 import { soundEngine } from '../../audio/SoundEngine';
 import { particleEngine } from '../../animations/ParticleEngine';
@@ -42,6 +42,10 @@ export function Dashboard() {
     volatility: 0.6,
     trendRange: 0.8,
     chartMode: 'cumulative',
+    source: {
+      type: 'simulation',
+      lightstepStatus: 'disconnected',
+    },
   });
 
   const [soundConfig, setSoundConfig] = useState<SoundConfig>({
@@ -254,7 +258,7 @@ export function Dashboard() {
     }
   }, [incrementCombo, checkMilestones]);
 
-  useOrderSimulator(simulation, handleOrders);
+  useOrderSource(simulation, handleOrders);
 
   const handleReset = useCallback(() => {
     setSimulation(prev => ({ ...prev, isPlaying: false }));
